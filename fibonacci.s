@@ -41,8 +41,8 @@ main:
 	push	r15
 	mov		r15, rsi
 
-	cmp 	edi, 1				; Check if the CL args == 1  (jump on equal)
-	je 		help
+	cmp 	edi, 2				; Check if the CL args == 1  (jump on equal)
+	jne 		help
 
 	;cmp 	edi, 2
 	;jne 	Usage_Error			;If more than 1 CL arguement => ERROR ( jump on not equal )
@@ -62,15 +62,17 @@ main:
 	mov rcx, [rsp]
 	mov qword[temp], rax
 	
+	;Check to see if the user entered the value 0 on the command line
 	cmp qword[temp], 0
 	je 	print_output;
 
+	;set the input value from the command line as the counter, which will decrement to one.
 	mov rbx, qword[temp]
 
 fib_loop:
-	mov rdi, msg1
-	mov rsi, rbx
-	call printf
+	;mov rdi, msg1
+	;mov rsi, rbx
+	;call printf
 
 	; Move the value of a = b
 	mov rdx, qword [b]
@@ -99,53 +101,62 @@ fib_loop:
 	mov qword[b + 32], rax
 	mov rax, qword[total + 40]
 	mov qword[b + 40], rax
-	;jmp update_a_and_b
 
+	; update the total value = a + b
+	; Add lower order chunk
 	mov rax, qword[a]
 	add rax, qword[b]
 	mov qword[total], rax
 	
+	; Add together 2nd lowest order chunk and carry value.
 	mov rax, qword[a + 8]
 	adc rax, qword[b + 8]
 	mov qword[total + 8], rax
 
+	; Add together next highest order chunk and carry value
 	mov rax, qword[a + 16]
 	adc rax, qword[b + 16]
 	mov qword[total + 16], rax
 
+	; Add together next highest order chunk and carry value
 	mov rax, qword[a + 24]
 	adc rax, qword[b + 24]
 	mov qword[total + 24], rax
 
+	; Add together next highest order chunk and carry value
 	mov rax, qword[a + 32]
 	adc rax, qword[b + 32]
 	mov qword[total + 32], rax
 
+	; Add together highest order chunk and carry value
 	mov rax, qword[a + 40]
 	adc rax, qword[b + 40]
 	mov qword[total + 40], rax
 
+	; Check if the counter has reached 1
 	cmp ebx, 1
 	je print_output	
 
+	; Decrement the counter
 	dec ebx
 	jmp fib_loop
-	jmp Return
+	;jmp Return
 
 print_output:	; The values need to be in reverse order!
-	mov rdi, msg2
-	call printf
+	;mov 	rdi, msg2
+	;call 	printf
 
-	mov rdi, printf_prompt
-	mov rsi, [total + 40]
-	mov rdx, [total + 32]
-	mov rcx, [total + 24]
-	mov r8, [total + 16]
-	mov r9, [total + 8]
-	push qword[total]
-	xor rax, rax	
-	call printf
-	pop qword[temp]
+	; Prepare printf call for output
+	mov 	rdi, printf_prompt
+	mov 	rsi, [total + 40]
+	mov 	rdx, [total + 32]
+	mov 	rcx, [total + 24]
+	mov 	r8, [total + 16]
+	mov 	r9, [total + 8]
+	push	qword[total]
+	xor 	rax, rax	
+	call 	printf
+	pop 	qword[temp]
 
 ; This would provide a proper exit
 Return:
