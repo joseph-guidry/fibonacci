@@ -60,9 +60,6 @@ main:
 	mov 	rbx, qword[temp]
 
 fib_loop:
-	;mov 	rdi, msg1
-	;mov 	rsi, rbx
-	;call 	printf
 
 	; Move the value of a = b
 	mov 	rdx, qword [b]
@@ -132,8 +129,6 @@ fib_loop:
 	jmp 	fib_loop
 
 print_output:	; The values need to be in reverse order!
-	;mov 	rdi, msg2
-	;call 	printf
 
 	; Prepare printf call for output
 	mov 	rdi, printf_prompt
