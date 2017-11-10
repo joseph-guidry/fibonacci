@@ -16,16 +16,10 @@
 	global	main
 ;+==============================================================================================================+
 	SECTION .data
-msg1: db "Loop msg %d", 10, 0
-msg2: db "print msg", 10, 0
-msg3: db "update msg", 10, 0
-
-Echo:
-	db "The command line is: %s %s", 10, 0
-
 scanf_prompt:	db "Please enter the desired Fibonacci Number(0 - 200):", 0
 printf_prompt:  db "%016llx%016llx%016llx%016llx%016llx%016llx", 10, 0
-error_prompt:   db "No value was entered",10,"Please enter a single integer(0 - 500)", 10, 0
+usage_prompt:   db "Please enter a single integer(0 - 500)", 10, 0
+input_error_prompt: db "Arguement outside the expected range (0 - 500)", 10, 0
 
 total:	dq 0, 0, 0, 0, 0, 0
 
@@ -42,7 +36,7 @@ main:
 	mov		r15, rsi
 
 	cmp 	edi, 2				; Check if the CL args == 1  (jump on equal)
-	jne 	help
+	jne 	usage_error
 
 	; Convert arguement to input value
 	mov 	rdi, [r15 + 8]
@@ -53,6 +47,12 @@ main:
 	mov 	qword[temp], rax
 	
 	;Check to see if the user entered the value 0 on the command line
+	cmp		qword[temp], 500
+	jg		invalid_input
+
+	cmp qword[temp], 0
+	jl		invalid_input
+
 	cmp 	qword[temp], 0
 	je 		print_output;
 
@@ -147,8 +147,14 @@ Return:
 	pop 	r15	
 	ret
 
-help:
-	; NEED TO HAVE FLOURISH PRINT OUT/SCANF STUFF.
-	mov 	rdi, error_prompt
+usage_error:
+	; Output for user with usage error
+	mov 	rdi, usage_prompt
+	call 	printf
+	jmp		Return
+
+invalid_input:
+	; If command line arguement is outside of range (0 - 500)
+	mov 	rdi, input_error_prompt
 	call 	printf
 	jmp		Return
