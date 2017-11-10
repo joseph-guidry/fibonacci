@@ -19,7 +19,7 @@
 scanf_prompt:	db "Please enter the desired Fibonacci Number(0 - 200):", 0
 printf_prompt:  db "%016llx%016llx%016llx%016llx%016llx%016llx", 10, 0
 usage_prompt:   db "Please enter a single integer(0 - 500)", 10, 0
-input_error_prompt: db "Arguement outside the expected range (0 - 500)", 10, 0
+input_error_prompt: db "Argument outside the expected range (0 - 500)", 10, 0
 
 total:	dq 0, 0, 0, 0, 0, 0
 
@@ -35,10 +35,11 @@ main:
 	push	r15
 	mov		r15, rsi
 
-	cmp 	edi, 2				; Check if the CL args == 1  (jump on equal)
+	; Check if the CL args == 2  (./fibonacci [N])
+	cmp 	edi, 2				
 	jne 	usage_error
 
-	; Convert arguement to input value
+	; Convert argument to input value
 	mov 	rdi, [r15 + 8]
 	mov 	rdx, 10
 	lea 	rsi, [rsp]
@@ -56,7 +57,7 @@ main:
 	cmp 	qword[temp], 0
 	je 		print_output;
 
-	;set the input value from the command line as the counter, which will decrement to one.
+	;set the input value from the command line as the counter, which decrements to one.
 	mov 	rbx, qword[temp]
 
 fib_loop:
@@ -124,12 +125,13 @@ fib_loop:
 	cmp 	ebx, 1
 	je 		print_output	
 
-	; Decrement the counter
+	; Decrements the counter
 	dec 	ebx
 	jmp 	fib_loop
 
-print_output:	; The values need to be in reverse order!
+print_output:	
 
+	; The values need to be in reverse order!
 	; Prepare printf call for output
 	mov 	rdi, printf_prompt
 	mov 	rsi, [total + 40]
@@ -154,7 +156,7 @@ usage_error:
 	jmp		Return
 
 invalid_input:
-	; If command line arguement is outside of range (0 - 500)
+	; If command line argument is outside of range (0 - 500)
 	mov 	rdi, input_error_prompt
 	call 	printf
 	jmp		Return

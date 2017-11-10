@@ -1,3 +1,5 @@
+*.bak
 core
 fibonacci
 *.o
+*~

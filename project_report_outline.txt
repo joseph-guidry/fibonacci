@@ -1,0 +1,76 @@
+Name:	Joseph Guidry
+Date:	10 Nov. 2017
+Current Module: x86 Assembly
+Project Name: fibonacci
+
+Project Goals:
+	<A two to three sentence description of the project and its intent>
+	The goals of this project were to write a program with x86 assembly that calculates the fibonacci sequence from 0 to
+	a number entered on the command line between 0 and 500. Also numbers outside the range would be rejected.
+
+Considerations:
+	<A bulleted list of considerations and conditions which affected the design of your project>
+	- Proper order of operations to calculate fibonacci sequence.
+	- Error handling of invalid input.
+	- Calculating very large numbers in chunks.
+
+Initial Design:
+	<A paragraph or more that adequately describes your program's structure and layout discussing the various modules (.c and corresponding .h files) that you implemented>
+	The program is contained in a single file, fibonacci.s:
+	This file contains three sections:
+		.data : Defines the variables total, a, and b. The print strings are also defined in this section.
+		.bss  : Sets aside memory for the input value of the command line argument which will be used as a counter in this program.
+		.text : The instructions of the program are stored identified by labels
+				- main : initial section of the program
+				- fib_loop : looping portion of the program that will cumulate the fibonacci sequence.
+				- print_output : After successful exit of fib_loop, the final value will be used to print to STDOUT
+				- usage_error  : Handle incorrect usage of program.
+				- invalid_input: Handle error message for invalid user input
+				- return: used as a single exit point for other sections of the program.
+	
+Data Flow:
+	<A paragraph or longer describing the data flow of the program in a sequential manner.  Include a diagram when necessary.>
+
+	Program enters at main label, checking the number of parameters passed in the program.  If not two arguments, program jumps to
+	handle this error.  If successful, the argument will be converted from a string, to a unsigned long. The program will ensure the
+	number is within the range ( 0 - 500), else it will jump to signal an error about the input value. The value is used as a counter, and
+	enters the fib_loop.  
+	
+	The value a is moved to b, total is moved to b, the two values are added together and stored in total. Each phase is done for each chunk.
+	Once completed the counter will check if the loop has completed, jump to print the total value.  Else, decrement the counter, and 
+	continue the loop.
+
+Communication Protocol:
+	<Discuss any custom communication protocol you have used including the various request and responses that may be sent and received.>
+	No custom communication protocol was used in this program.
+
+Potential Pitfalls:
+	<Discuss any potential issues that you might run into while creating the project>
+	- Stomping on registers while moving data.
+	- Incorrect sequence of operations. 
+	- Push/pop operations for printf().
+	- Error handling.
+
+Test Plan:
+	User Test:
+ 		<Describe the steps taken for each user test.>
+		- Build the command line arguement conversion.
+		- Output parameters to STDOUT
+		- Correctly add large chunks of numbers.
+	Test Cases:
+		<A brief overview of the test cases that you implemented.>
+		- Build skeleton program identifying each section of the assembly program, and compile.
+		- Use printf() to output text.
+		- Interpret command line arguemnts, output/echo to the screen.
+		- Perform looping.
+		- Handle errors. 
+		- Correctlly add chunks of numbers and handle carry values. 
+
+Conclusion:
+	<A review of the project, what worked, what didn’t and how to improve upon your project in the future.>
+	Another enjoyable project that built upon learned and discussed topics in class. There was very little confusion
+	on the goal of the project. The attempt at converting the hex value into decimal, failed but was enjoyable to attempt.
+
+
+
+
